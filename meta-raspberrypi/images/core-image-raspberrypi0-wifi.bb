@@ -30,7 +30,7 @@ IMAGE_INSTALL += " \
 "
 
 disable_gettys() {
-    # TODO: If debug-tweaks isn't set, disable the gettty service.
+    echo "TODO disable gettys"
 }
 
 set_local_timezone() {
