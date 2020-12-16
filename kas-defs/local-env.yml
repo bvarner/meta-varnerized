@@ -1,0 +1,13 @@
+header:
+  version: 9
+
+env:
+  foo: BAR
+
+local_conf_header:
+  local_machine_settings: |
+    SDKMACHINE = "x86_64"
+    BB_NICE_LEVEL="19"
+  debug-tweaks: |
+    EXTRA_IMAGE_FEATURES = "debug-tweaks"
+

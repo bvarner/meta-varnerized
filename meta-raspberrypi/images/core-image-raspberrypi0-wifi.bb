@@ -30,7 +30,7 @@ IMAGE_INSTALL += " \
 "
 
 disable_gettys() {
-    echo "TODO disable gettys"
+    echo "foo is : ${foo}"
 }
 
 set_local_timezone() {
