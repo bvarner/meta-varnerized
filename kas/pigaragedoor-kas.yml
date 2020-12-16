@@ -10,8 +10,8 @@ target:
 
 repos:
   meta-varnerized:
-    url: git@github.com:bvarner/meta-varnerized
-    refspec: develop
+    url: https://github.com/bvarner/meta-varnerized
+    refspec: gatesgarth
     layers:
       meta-core:
       meta-raspberrypi:
