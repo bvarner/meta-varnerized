@@ -34,6 +34,7 @@ For a raspberrypi0-wifi machine: (other machines can use other kas files or you 
 
 * `ssid` - The name of a wireless network to join.
 * `psk`  - The passphrase for that network.
+* `timezone` - The name of a timezone from the [tz database](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones)
 
 If both `ssid` and `psk` are defined, wpa supplicant will be configured to join that network with DHCP.
 If a wired ethernet port is connected, DHCP will be used for that as well.
