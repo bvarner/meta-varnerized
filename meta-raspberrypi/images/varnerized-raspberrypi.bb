@@ -1,10 +1,10 @@
-SUMMARY = "An image to bring up a Raspberry Pi Zero W With decent driver support."
+SUMMARY = "An image to bring up a Raspberry."
 HOMEPAGE = "https://github.com/bvarner/meta-varnerized"
 LICENSE = "MIT"
 
 SDIMG_ROOTFS_TYPE = "ext4"
 IMAGES_FSTYPES += "wic wic.bmap"
-WKS_FILE = "sdimage-raspberrypi-persistentvar.wks"
+WKS_FILE = "sdimage-raspberrypi.wks"
 
 DEPENDS += "bootfiles"
 
@@ -82,5 +82,5 @@ ROOTFS_POSTPROCESS_COMMAND += " \
     setup_certs ;\
 "
 
-export IMAGE_BASENAME = "core-image-raspberrypi0-wifi-image"
+export IMAGE_BASENAME = "varnerized-raspberrypi-image"
 

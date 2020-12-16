@@ -2,7 +2,7 @@ SUMMARY = "PiGarageDoor - A relay controlled raspberry pi garage door opener."
 HOMEPAGE = "https://github.com/bvarner/meta-varnerized"
 LICENSE = "MIT"
 
-include images/core-image-raspberrypi0-wifi.bb
+include images/varnerized-raspberrypi.bb
 
 IMAGE_INSTALL += " \
     pigaragedoor \
