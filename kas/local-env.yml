@@ -12,5 +12,5 @@ local_conf_header:
     SDKMACHINE = "x86_64"
     BB_NICE_LEVEL="19"
   debug-tweaks: |
-    EXTRA_IMAGE_FEATURES = "debug-tweaks"
+#    EXTRA_IMAGE_FEATURES = "debug-tweaks"
 
