@@ -6,7 +6,7 @@ SDIMG_ROOTFS_TYPE = "ext4"
 IMAGES_FSTYPES += "wic wic.bmap"
 WKS_FILE = "sdimage-raspberrypi-persistentvar.wks"
 
-DEPENDS += "bcm2835-bootfiles"
+DEPENDS += "bootfiles"
 
 IMAGE_LINGUAS = "en-us"
 
@@ -20,7 +20,6 @@ IMAGE_INSTALL += " \
     kernel-modules \
     udev-rules-rpi \
     tzdata \
-    userland \
     iw \
     linux-firmware-ralink \
     linux-firmware-rtl8192ce \
