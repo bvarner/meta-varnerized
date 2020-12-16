@@ -33,4 +33,4 @@ The process looks something like this:
    bmaptool copy --bmap <image_filename>.bmap <image_filename>.bz2 /path/to/mmc/block/device
    ```
 
-** Further details and documentation may be found in the `meta-<project>` directories.**
+**Further details and documentation may be found in the `meta-<project>` directories.**
