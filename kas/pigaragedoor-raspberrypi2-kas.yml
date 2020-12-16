@@ -1,0 +1,7 @@
+header:
+  version: 9
+  includes:
+    - local-env.yml
+    - pigaragedoor-raspberrypi-kas.yml
+
+machine: raspberrypi2

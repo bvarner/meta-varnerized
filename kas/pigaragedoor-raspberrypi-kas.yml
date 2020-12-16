@@ -3,7 +3,7 @@ header:
   includes:
     - local-env.yml
 
-machine: raspberrypi0-wifi
+machine: raspberrypi
 distro: poky
 target:
   - pigaragedoor-image
