@@ -31,7 +31,7 @@ IMAGE_INSTALL += " \
 
 disable_gettys() {
     if [ -n "${disable_getty}" ]; then
-        echo "Disabling getty via /etc/systemd/logind.conf
+        echo "Disabling getty via /etc/systemd/logind.conf"
         echo 'NAutoVTs=0' >> ${IMAGE_ROOTFS}/etc/systemd/logind.conf
         echo 'ReserveVT=N' >> ${IMAGE_ROOTFS}/etc/systemd/logind.conf
     fi
