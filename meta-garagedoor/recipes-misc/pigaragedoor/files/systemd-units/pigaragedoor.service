@@ -1,0 +1,11 @@
+[Unit]
+Description=Pi Garage Door Output Pin Initializer
+Wants=network-online.target
+After=network.target network-online.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/pigaragedoor
+ 
+[Install]
+WantedBy=multi-user.target

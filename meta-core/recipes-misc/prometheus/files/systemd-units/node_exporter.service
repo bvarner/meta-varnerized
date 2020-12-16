@@ -1,0 +1,11 @@
+[Unit]
+Description=Prometheus Node Exporter
+Wants=network-online.target
+After=network.target network-online.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/node_exporter --collector.disable-defaults --collector.cpu --collector.filesystem --collector.loadavg --collector.meminfo
+
+[Install]
+WantedBy=default.target
