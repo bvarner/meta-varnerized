@@ -30,11 +30,20 @@ IMAGE_INSTALL += " \
 "
 
 disable_gettys() {
-    echo "foo is : ${foo}"
+    if [ -n "${disable_getty}" ]; then
+        echo "Disabling getty"
+        # TODO - there is a better way to do this with uboot, by removing `console=tty1` from the boot arguments.
+        rm ${D}${sysconfdir}/systemd/system/getty.target.wants/getty@*.service
+    fi
 }
 
 set_local_timezone() {
-    ln -sf /usr/share/zoneinfo/UTC ${IMAGE_ROOTFS}/etc/localtime
+    if [ -n "${timezone}" ]; then
+        echo "Setting timezone to: ${timezone}"
+        ln -sf "/usr/share/zoneinfo/${timezone}" ${IMAGE_ROOTFS}/etc/localtime
+    else
+        ln -sf /usr/share/zoneinfo/UTC ${IMAGE_ROOTFS}/etc/localtime
+    fi
 }
 
 # Sets up an /etc/wpa_supplicant directory, where you can put configurations for 
@@ -51,15 +60,19 @@ setup_wpa_supplicant() {
     echo 'ctrl_interface=/var/run/wpa_supplicant' >> ${IMAGE_ROOTFS}/etc/wpa_supplicant/wpa_supplicant-nl80211-wlan0.conf
     echo 'ctrl_interface_group=0' >> ${IMAGE_ROOTFS}/etc/wpa_supplicant/wpa_supplicant-nl80211-wlan0.conf
     echo 'update_config=1' >> ${IMAGE_ROOTFS}/etc/wpa_supplicant/wpa_supplicant-nl80211-wlan0.conf
+    
+    # If there are environment variables set for the ssid and psk, use them.
+    if [ -n "${ssid}" ] && [ -n "{psk}" ]; then
+        echo 'network={' >> ${IMAGE_ROOTFS}/etc/wpa_supplicant/wpa_supplicant-nl80211-wlan0.conf
+        echo '    ssid="${ssid}"' >> ${IMAGE_ROOTFS}/etc/wpa_supplicant/wpa_supplicant-nl80211-wlan0.conf
+        echo '    psk=${psk}' >> ${IMAGE_ROOTFS}/etc/wpa_supplicant/wpa_supplicant-nl80211-wlan0.conf
+        echo '}' >> ${IMAGE_ROOTFS}/etc/wpa_supplicant/wpa_supplicant-nl80211-wlan0.conf
+    fi    
 }
 
 setup_certs() {
     echo "installing SSL certs..."
     mkdir -p ${IMAGE_ROOTFS}/etc/ssl/certs
-    
-    # Copy local pem files to....
-    #cp /path/tofile/on/your/machine ${IMAGE_ROOTFS}/etc/ssl/certs/pi-launch-control.pem
-    #cp /path/tofile/on/your/machine ${IMAGE_ROOTFS}/etc/ssl/certs/pi-launch-control-key.pem
 }
 
 ROOTFS_POSTPROCESS_COMMAND += " \

@@ -2,7 +2,10 @@ header:
   version: 9
 
 env:
-  foo: BAR
+  disable_getty: ""
+  timezone: "America/Indiana/Indianapolis"
+  ssid: ""
+  psk: ""
 
 local_conf_header:
   local_machine_settings: |
