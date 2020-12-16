@@ -40,7 +40,7 @@ repos:
 local_conf_header:
   varnerized_pi_setup: |
     GPU_MEM = "16"
-    hostname_pn_base-files-name = "garage-door"
+    hostname_pn_base-files = "garage-door"
     DISTRO_FEATURES = "systemd usbhost wifi zeroconf "
     DISTRO_FEATURES_BACKFILL_CONSIDERED += "sysvinit"
     VIRTUAL-RUNTIME_init_manager = "systemd"

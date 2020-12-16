@@ -31,9 +31,9 @@ IMAGE_INSTALL += " \
 
 disable_gettys() {
     if [ -n "${disable_getty}" ]; then
-        echo "Disabling getty"
-        # TODO - there is a better way to do this with uboot, by removing `console=tty1` from the boot arguments.
-        rm ${D}${sysconfdir}/systemd/system/getty.target.wants/getty@*.service
+        echo "Disabling getty via /etc/systemd/logind.conf
+        echo 'NAutoVTs=0' >> ${IMAGE_ROOTFS}/etc/systemd/logind.conf
+        echo 'ReserveVT=N' >> ${IMAGE_ROOTFS}/etc/systemd/logind.conf
     fi
 }
 
