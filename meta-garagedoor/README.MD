@@ -8,7 +8,7 @@ For a raspberrypi0-wifi machine: (other machines can use other kas files or you 
 
 1. Get the tools
    ```
-   sudo apt-get install bmaptools git python3-pip
+   sudo apt-get install bmap-tools git python3-pip
    sudo pip3 install kas
    mkdir /opt/kas-builds
    cd /opt/kas-builds
