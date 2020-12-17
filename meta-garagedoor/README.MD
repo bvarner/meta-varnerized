@@ -54,6 +54,3 @@ For example:
 ```
     hostname_pn_base-files = "shop-door-bay1"
 ```
-
-## Building
-Build this project using `kas`, as described in the [meta-varnerized README](../README.md), using any of the `pigaragedoor-<machine>-kas.yml` files and customizing to your liking.
