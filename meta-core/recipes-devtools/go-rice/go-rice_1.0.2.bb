@@ -31,9 +31,3 @@ BBCLASSEXTEND += "native"
 
 inherit go-mod
 
-# Modern go builds that use go modules need dependencies to be fetched before compile...
-#do_compile_prepend() {
-#    ( cd ${WORKDIR}/build/src/${GO_IMPORT} && ${GO} get -v -d ./... && chmod -R +rw .. )
-#    
-#}
-
