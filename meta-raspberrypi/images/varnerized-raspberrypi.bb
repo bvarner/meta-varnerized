@@ -46,6 +46,7 @@ set_local_timezone() {
     fi
 }
 
+
 # Sets up an /etc/wpa_supplicant directory, where you can put configurations for 
 # wpa_supplicant for your network devices. 
 # Enables wpa_supplicant for 802.11 on wlan0
@@ -56,10 +57,7 @@ setup_wpa_supplicant() {
     
     # Create the config directory and seed with a proper nl80211-wlan0 conf.
     mkdir -p ${IMAGE_ROOTFS}/etc/wpa_supplicant
-    
-    echo 'ctrl_interface=/var/run/wpa_supplicant' >> ${IMAGE_ROOTFS}/etc/wpa_supplicant/wpa_supplicant-nl80211-wlan0.conf
-    echo 'ctrl_interface_group=0' >> ${IMAGE_ROOTFS}/etc/wpa_supplicant/wpa_supplicant-nl80211-wlan0.conf
-    echo 'update_config=1' >> ${IMAGE_ROOTFS}/etc/wpa_supplicant/wpa_supplicant-nl80211-wlan0.conf
+    cp ${IMAGE_ROOTFS}/etc/wpa_supplicant.conf ${IMAGE_ROOTFS}/etc/wpa_supplicant/wpa_supplicant-nl80211-wlan0.conf
     
     # If there are environment variables set for the ssid and psk, use them.
     if [ -n "${ssid}" ] && [ -n "{psk}" ]; then
@@ -79,7 +77,7 @@ ROOTFS_POSTPROCESS_COMMAND += " \
     set_local_timezone ; \
     setup_wpa_supplicant ; \
     disable_gettys ; \
-    setup_certs ;\
+    setup_certs ; \
 "
 
 export IMAGE_BASENAME = "varnerized-raspberrypi-image"
