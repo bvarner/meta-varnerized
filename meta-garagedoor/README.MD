@@ -13,10 +13,13 @@ For a raspberrypi0-wifi machine: (other machines can use other kas files or you 
    mkdir /opt/kas-builds
    cd /opt/kas-builds
    ```
-2. Get the repo & Configure your network `ssid` and `psk`
+2. Get the repo & Configure your network `ssid`, `psk`, and timezone. Tell git to not track local changes.
    ```
    git clone https://github.com/bvarner/meta-varnerized.git
    nano meta-varnerized/kas/local-env.yml
+   cd meta-varnerized
+   git update-index --skip-worktree kas/local-env.yml
+   cd ..
    ```
 3. Run the build:
    ```
