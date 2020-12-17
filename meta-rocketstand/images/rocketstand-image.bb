@@ -41,7 +41,7 @@ setup_wpa_supplicant_append() {
     echo 'EmitTimezone=no' >> ${IMAGE_ROOTFS}/etc/systemd/network/wlan.network
 
     # If the SSID is null, setup a "RocketStand" adhoc network.
-    if [ -n "${ssid} ]; then
+    if [ -n "${ssid}" ]; then
         # Update the wpa_supplicant to create an adhoc base station known as 'RocketStand'.
         echo 'ap_scan=2' >> ${IMAGE_ROOTFS}/etc/wpa_supplicant/wpa_supplicant-nl80211-wlan0.conf
         echo 'network={' >> ${IMAGE_ROOTFS}/etc/wpa_supplicant/wpa_supplicant-nl80211-wlan0.conf
@@ -54,7 +54,7 @@ setup_wpa_supplicant_append() {
         echo '    group=CCMP' >> ${IMAGE_ROOTFS}/etc/wpa_supplicant/wpa_supplicant-nl80211-wlan0.conf
     
         # Use the psk if set, otherwise, use 'ignition'.
-        if [ -n "${psk"} ]; then
+        if [ -n "${psk}" ]; then
             echo '    psk="${psk}"' >> ${IMAGE_ROOTFS}/etc/wpa_supplicant/wpa_supplicant-nl80211-wlan0.conf
         else
             echo '    psk="ignition"' >> ${IMAGE_ROOTFS}/etc/wpa_supplicant/wpa_supplicant-nl80211-wlan0.conf
