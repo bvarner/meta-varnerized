@@ -1,0 +1,69 @@
+header:
+  version: 9
+  includes:
+    - local-env.yml
+
+env:
+  disable_getty: "1"
+  timezone: "America/Indiana/Indianapolis"
+# I want to use the default RocketStand / ignition adhoc network.
+  ssid: ""
+  psk: ""
+
+machine: raspberrypi
+distro: poky
+target:
+  - rocketstand-image
+
+repos:
+  meta-varnerized:
+    url: https://github.com/bvarner/meta-varnerized
+    refspec: gatesgarth
+    layers:
+      meta-core:
+      meta-raspberrypi:
+      meta-rocketstand:
+
+  meta-raspberrypi:
+    url: https://github.com/agherzan/meta-raspberrypi.git
+    refspec: gatesgarth
+
+  poky:
+    url: https://git.yoctoproject.org/git/poky
+    refspec: gatesgarth
+    layers:
+      meta:
+      meta-poky:
+      meta-yocto-bsp:
+
+  meta-openembedded:
+    url: http://git.openembedded.org/meta-openembedded
+    refspec: gatesgarth
+    layers:
+      meta-oe:
+      meta-python:
+      meta-networking:
+
+local_conf_header:
+  rocketstand: |
+    GPU_MEM = "128"
+    ENABLE_I2C = "1"
+    DISABLE_OVERSCAN = "1"
+    VIDEO_CAMERA = "1"
+    LINUX_KERNEL_TYPE = "preempt-rt"
+  varnerized_pi_setup: |
+    RPI_USE_UBOOT = "1"
+    hostname_pn_base-files = "rocketstand"
+    DISTRO_FEATURES = "systemd usbhost wifi zeroconf "
+    DISTRO_FEATURES_BACKFILL_CONSIDERED += "sysvinit"
+    VIRTUAL-RUNTIME_init_manager = "systemd"
+    VIRTUAL-RUNTIME_initscripts = "systemd-compat-units"
+    LICENSE_FLAGS_WHITELIST = "commercial"
+  reduce_diskspace: |
+    INHERIT += "rm_work_and_downloads"
+    RM_OLD_IMAGE = "1"
+  standard: |
+    CONF_VERSION = "1"
+    PACKAGE_CLASSES = "package_ipk"
+    USER_CLASSES = "buildstats image-mklibs image-prelink"
+    PATCHRESOLVE = "noop"
