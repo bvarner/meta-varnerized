@@ -1,7 +1,7 @@
 inherit go
 
 DEPENDS_GORICE_class-target = "go-rice go-rice-native"
-DEPENDS_GORICE_class-native =  "go-rice-native"
+DEPENDS_GORICE_class-native = "go-rice-native"
 
 DEPENDS_append = " ${DEPENDS_GORICE}"
 
@@ -35,3 +35,4 @@ go_do_compile_append() {
 		done
 	fi
 }
+

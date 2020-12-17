@@ -10,7 +10,7 @@ env:
   ssid: ""
   psk: ""
 
-machine: raspberrypi
+machine: raspberrypi0-wifi
 distro: poky
 target:
   - rocketstand-image
@@ -52,9 +52,9 @@ local_conf_header:
     VIDEO_CAMERA = "1"
     LINUX_KERNEL_TYPE = "preempt-rt"
   varnerized_pi_setup: |
-    RPI_USE_UBOOT = "1"
+    RPI_USE_U_BOOT = "1"
     hostname_pn_base-files = "rocketstand"
-    DISTRO_FEATURES = "systemd usbhost wifi zeroconf "
+    DISTRO_FEATURES = "bluetooth bluez5 systemd usbhost wifi zeroconf "
     DISTRO_FEATURES_BACKFILL_CONSIDERED += "sysvinit"
     VIRTUAL-RUNTIME_init_manager = "systemd"
     VIRTUAL-RUNTIME_initscripts = "systemd-compat-units"

@@ -39,7 +39,7 @@ repos:
 
 local_conf_header:
   varnerized_pi_setup: |
-    RPI_USE_UBOOT = "1"
+    RPI_USE_U_BOOT = "1"
     GPU_MEM = "16"
     hostname_pn_base-files = "garage-door"
     DISTRO_FEATURES = "systemd usbhost wifi zeroconf "

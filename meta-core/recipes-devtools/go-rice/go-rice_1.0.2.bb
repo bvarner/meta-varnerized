@@ -7,10 +7,10 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/BSD-2-Clause;md5=cb641bc04cda31
 
 SRCNAME = "go.rice"
 PKG_NAME = "github.com/GeertJohan/${SRCNAME}"
+SRCREV = "v1.0.2"
 SRC_URI = "\
-	git://${PKG_NAME}.git \
+	git://${PKG_NAME}.git;tag=${SRCREV} \
 "
-SRCREV = "v1.0.0"
 
 DEPENDS = ""
 
