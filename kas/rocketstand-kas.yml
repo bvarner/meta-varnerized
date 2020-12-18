@@ -61,7 +61,7 @@ local_conf_header:
     LICENSE_FLAGS_WHITELIST = "commercial"
   reduce_diskspace: |
     RM_OLD_IMAGE = "1"
-#    INHERIT += "rm_work_and_downloads"
+    INHERIT += "rm_work_and_downloads"
   standard: |
     CONF_VERSION = "1"
     PACKAGE_CLASSES = "package_ipk"
