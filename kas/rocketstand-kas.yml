@@ -21,8 +21,8 @@ repos:
     refspec: gatesgarth
     layers:
       meta-core:
-      meta-raspberrypi:
       meta-rocketstand:
+      meta-raspberrypi:
 
   meta-raspberrypi:
     url: https://github.com/agherzan/meta-raspberrypi.git
@@ -60,8 +60,8 @@ local_conf_header:
     VIRTUAL-RUNTIME_initscripts = "systemd-compat-units"
     LICENSE_FLAGS_WHITELIST = "commercial"
   reduce_diskspace: |
-    INHERIT += "rm_work_and_downloads"
     RM_OLD_IMAGE = "1"
+#    INHERIT += "rm_work_and_downloads"
   standard: |
     CONF_VERSION = "1"
     PACKAGE_CLASSES = "package_ipk"
