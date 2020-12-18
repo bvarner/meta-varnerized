@@ -32,14 +32,13 @@ RDEPENDS_${PN}-staticdev_append = "\
 # godep is being really stupid as a class. It's deleting the Gopkg.toml and lock.
 #inherit gorice godep systemd
 # So we'll duplicate most of it's functionality here.
-DEPENDS_append = " go-dep-native"
-do_compile_prepend() {
-    ( cd ${WORKDIR}/build/src/${GO_IMPORT} && dep ensure -v )
-}
+#DEPENDS_append = " go-dep-native"
+#do_compile_prepend() {
+#    ( cd ${WORKDIR}/build/src/${GO_IMPORT} && dep ensure -v )
+#}
 ## end godep hacking
 
-
-inherit gorice systemd
+inherit go-mod gorice systemd
 
 GO_LINKSHARED = ''
 GO_IMPORT = "${PKG_NAME}"

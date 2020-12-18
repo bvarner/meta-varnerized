@@ -25,9 +25,10 @@ RDEPENDS_${PN}-staticdev_append = "\
 
 GO_LINKSHARED = ''
 GO_IMPORT = "${PKG_NAME}"
-GO_INSTALL = "${GO_IMPORT}/..."
+GO_INSTALL = "github.com/GeertJohan/go.rice github.com/GeertJohan/go.rice/rice"
 
 BBCLASSEXTEND += "native"
 
 inherit go-mod
+
 
