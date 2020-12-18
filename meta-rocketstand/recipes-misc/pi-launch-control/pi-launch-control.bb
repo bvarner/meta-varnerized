@@ -28,16 +28,6 @@ RDEPENDS_${PN}-staticdev_append = "\
 	bash \
 "
 
-## begin godep hacking
-# godep is being really stupid as a class. It's deleting the Gopkg.toml and lock.
-#inherit gorice godep systemd
-# So we'll duplicate most of it's functionality here.
-#DEPENDS_append = " go-dep-native"
-#do_compile_prepend() {
-#    ( cd ${WORKDIR}/build/src/${GO_IMPORT} && dep ensure -v )
-#}
-## end godep hacking
-
 inherit go-mod gorice systemd
 
 GO_LINKSHARED = ''
@@ -46,11 +36,7 @@ GO_INSTALL = "${GO_IMPORT}/..."
 
 # Add the import path to the rice command.
 RICE_ARGS = "-v -i ${GO_IMPORT}/${SRCNAME}"
-# Set it up to append to the exec in a zip format.
 GO_RICE_EMBEDTYPE = 'go'
-#GO_RICE_APPEND = 'yes'
-
-
 
 
 do_install_append() {
