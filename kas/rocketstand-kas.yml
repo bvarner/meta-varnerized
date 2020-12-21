@@ -51,7 +51,7 @@ local_conf_header:
     DISABLE_OVERSCAN = "1"
     VIDEO_CAMERA = "1"
     LINUX_KERNEL_TYPE = "preempt-rt"
-    hostname_pn-base-files = "rocketstand"  
+    hostname_pn_base-files = "rocketstand"  
   varnerized_pi_setup: |
     RPI_USE_U_BOOT = "1"
     DISTRO_FEATURES = "bluetooth bluez5 systemd usbhost wifi zeroconf "
