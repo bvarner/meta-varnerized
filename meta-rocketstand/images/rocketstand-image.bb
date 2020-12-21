@@ -6,10 +6,6 @@ KERNEL_MODULE_AUTOLOAD += "bcm2835-v4l2"
 KERNEL_MODULE_PROBECONF += "bcm2835-v4l2"
 KERNEL_DEVICETREE += " overlays/hx711-rocketstand.dtbo"
 
-# included for debugging, because this is very much an unpolished project.
-IMAGE_FEATURES += "ssh-server-openssh"
-EXTRA_IMAGE_FEATURES += "debug-tweaks"
-
 include images/varnerized-raspberrypi.bb
 
 IMAGE_INSTALL += " \

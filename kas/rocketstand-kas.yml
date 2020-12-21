@@ -6,9 +6,9 @@ header:
 env:
   disable_getty: "1"
   timezone: "America/Indiana/Indianapolis"
-# I want to use the default RocketStand / ignition adhoc network.
-  ssid: ""
-  psk: ""
+# To use the dedicated ad-hoc network set these to ""
+#  ssid: ""
+#  psk: ""
 
 machine: raspberrypi0-wifi
 distro: poky
@@ -51,9 +51,9 @@ local_conf_header:
     DISABLE_OVERSCAN = "1"
     VIDEO_CAMERA = "1"
     LINUX_KERNEL_TYPE = "preempt-rt"
+    hostname_pn-base-files = "rocketstand"  
   varnerized_pi_setup: |
     RPI_USE_U_BOOT = "1"
-    hostname_pn_base-files = "rocketstand"
     DISTRO_FEATURES = "bluetooth bluez5 systemd usbhost wifi zeroconf "
     DISTRO_FEATURES_BACKFILL_CONSIDERED += "sysvinit"
     VIRTUAL-RUNTIME_init_manager = "systemd"
