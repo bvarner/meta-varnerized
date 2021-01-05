@@ -26,7 +26,7 @@ For a raspberrypi0-wifi machine: (other machines can use other kas files or you 
    ```
    kas build meta-varnerized/kas/pigaragedoor-raspberrypi0-wifi-kas.yml
    ```
-5. Copy the Image to an SD card (device `/dev/mmcblk0`)
+4. Copy the Image to an SD card (device `/dev/mmcblk0`)
    ```
    sudo umount /dev/mmcblk0p*
    cd build/tmp/deploy/images/raspberrypi0-wifi
@@ -45,34 +45,6 @@ For a raspberrypi0-wifi machine: (other machines can use other kas files or you 
 If both `ssid` and `psk` are defined, wpa supplicant will be configured to join that network with DHCP.
 If a wired ethernet port is connected, DHCP will be used for the wired network as well.
 
-## SSL Configuration
-1. Create a cert / key pair with your favorite tool of choice. 
-   I highly recommend [minica](https://github.com/jsha/minica), which you can use as follows:
-   ```
-   sudo apt-get install golang
-   cd /ANY/PATH
-   git clone https://github.com/jsha/minica.git
-   go install
-   minica --domains garage-door.local
-   ```
-2. Update the `kas/local-env.yml` with the absolute paths to your cert & key.
-   ```
-   cd /opt/kas-builds
-   nano meta-varnerized/kas/local-env.yml
-   ```
-   Adding the lines like this:
-   ```
-     PIGARAGEDOOR_CERT: "/ANY/PATH/garage-door.local/cert.pem"
-     PIGARAGEDOOR_CERT_KEY: "/ANY/PATH/garage-door.local/key.pem"
-   ```
-3. Run the kas build and copy the Image as in the Quick Build Instructions.
-4. You'll need to setup your devices to trust the 'root' certificate in `/ANY/PATH/minica.pem`. For some systems, this may require the root certificate to be in a DER format CRT file.
-   ```
-   sudo apt-get install openssl
-   openssl x509 -outform der -in /ANY/PATH/minica.pem -out /ANY/PATH/minica.crt
-   ```
-   On iOS devices, visiting the URL will enable you to 'trust' the certificate presented when you access `https://garage-door.local`.
-
 ### Setting the hostname
 By default mDNS will be setup for `garage-door.local` and advertised on the local network link.
 
@@ -85,3 +57,37 @@ For example:
 ```
     hostname_pn-base-files = "shop-door"
 ```
+
+### SSL Configuration
+Keep in mind that the SSL certificate will need to match the hostname. In the example below, we assume the default `garage-door` hostname is being used, and will result in being advertised on your local network as `garage-door.local`.
+1. Create a cert / key pair with your favorite tool of choice. 
+   I highly recommend [minica](https://github.com/jsha/minica), which can be used as follows.
+   ```
+   sudo apt-get install golang
+   cd ~
+   git clone https://github.com/jsha/minica.git
+   go install
+   mkdir ~/certificates
+   cd ~/certificates
+   ~/go/bin/minica --domains garage-door.local
+   ```
+   This gets the `go` lang tools, gets the source for minica, and builds / installs the tool into `~/go/bin`. Then we create a directory to store certificates in within the home directory, and execute the command there to create a root cert (you can trust on all your devices) and then issue a new purpose-specific cert from it.
+2. Update the `kas/local-env.yml` with the absolute paths to your cert & key.
+   ```
+   cd /opt/kas-builds
+   nano meta-varnerized/kas/local-env.yml
+   ```
+   Adding the lines like this:
+   ```
+     PIGARAGEDOOR_CERT: "/home/YOUR_USERNAME/certificates/garage-door.local/cert.pem"
+     PIGARAGEDOOR_CERT_KEY: "/home/YOUR_USERNAME/certificates/garage-door.local/key.pem"
+   ```
+   The file paths _must_ be absolute, or this will not work properly.
+3. Run the kas build and copy the Image as in the Quick Build Instructions steps 3 and 4. 
+4. You may need to setup your devices to trust the 'root' certificate in `/home/YOUR_USERNAME/certificates/minica.pem`. For some systems, this may require the root certificate to be in a DER format CRT file.
+   ```
+   sudo apt-get install openssl
+   cd ~/certificates
+   openssl x509 -outform der -in ./minica.pem -out ./minica.crt
+   ```
+   On iOS devices, visiting the URL will enable you to 'trust' the certificate presented when you access `https://garage-door.local`, which should be sufficient for this use.
