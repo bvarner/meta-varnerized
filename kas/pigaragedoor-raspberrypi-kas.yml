@@ -38,10 +38,14 @@ repos:
       meta-networking:
 
 local_conf_header:
+  pigaragedoor_config: |
+# Set to an absolute path for a cert and key to enable SSL.
+#    PIGARAGEDOOR_CERT = ""
+#    PIGARAGEDOOR_CERT_KEY = ""
   varnerized_pi_setup: |
     RPI_USE_U_BOOT = "1"
     GPU_MEM = "16"
-    hostname_pn_base-files = "garage-door"
+    hostname_pn-base-files = "garage-door"
     DISTRO_FEATURES = "systemd usbhost wifi zeroconf "
     DISTRO_FEATURES_BACKFILL_CONSIDERED += "sysvinit"
     VIRTUAL-RUNTIME_init_manager = "systemd"
