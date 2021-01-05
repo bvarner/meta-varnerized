@@ -6,6 +6,9 @@ env:
   timezone: "America/Indiana/Indianapolis"
   ssid: ""
   psk: ""
+#  PIGARAGEDOOR_CERT: "/path/to/your/garage-door.local/cert.pem"
+#  PIGARAGEDOOR_CERT_KEY: "/path/to/your/garage-door.local/key.pem"
+
 
 local_conf_header:
   local_machine_settings: |
