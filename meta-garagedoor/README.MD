@@ -2,15 +2,16 @@
 A bit bake layer to build a [Raspberry Pi Garage Door Opener](https://www.instructables.com/Raspberry-Pi-Garage-Door-Opener/) from this instructable,
 with some improved software with this [pigaragedoor daemon](https://github.com/bvarner/pigaragedoor), and a more robust embedded linux distro at the base.
 
-## Quick Build Instructions (Ubuntu 20.10)
+## Quick Build Instructions (Tested with Ubuntu 20.10)
 
 For a raspberrypi0-wifi machine: (other machines can use other kas files or you can customize your own)
 
 1. Get the tools
    ```
-   sudo apt-get install bmap-tools git python3-pip
+   sudo apt-get install chrpath diffstat bmap-tools git python3-pip
    sudo pip3 install kas
-   mkdir /opt/kas-builds
+   sudo mkdir /opt/kas-builds
+   sudo chmod a+rw /opt/kas-builds
    cd /opt/kas-builds
    ```
 2. Get the repo & Configure your network `ssid`, `psk`, and `timezone`. Tell git to not track local changes.
