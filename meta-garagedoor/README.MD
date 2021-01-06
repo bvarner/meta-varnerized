@@ -39,8 +39,7 @@ For a raspberrypi0-wifi machine: (other machines can use other kas files or you 
 * `ssid` - The name of a wireless network to join.
 * `psk`  - The passphrase for that network.
 * `timezone` - The name of a timezone from the [tz database](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones)
-* `PIGARAGEDOOR_CERT` - Absolute path to a certificate file for SSL.
-* `PIGARAGEDOOR_CERT_KEY` - Absolute path to the keyfile for SSL cert.
+* `pigaragedoor_CERTDIR` - Absolute path to a directory containing a cert.pem and key.pem pair for SSL.
 
 If both `ssid` and `psk` are defined, wpa supplicant will be configured to join that network with DHCP.
 If a wired ethernet port is connected, DHCP will be used for the wired network as well.
@@ -79,10 +78,9 @@ Keep in mind that the SSL certificate will need to match the hostname. In the ex
    ```
    Adding the lines like this:
    ```
-     PIGARAGEDOOR_CERT: "/home/YOUR_USERNAME/certificates/garage-door.local/cert.pem"
-     PIGARAGEDOOR_CERT_KEY: "/home/YOUR_USERNAME/certificates/garage-door.local/key.pem"
+     pigaragedoor_CERTDIR: "/home/YOUR_USERNAME/certificates/garage-door.local"
    ```
-   The file paths _must_ be absolute, or this will not work properly.
+   The file path _must_ be absolute, or this will not work properly.
 3. Run the kas build and copy the Image as in the Quick Build Instructions steps 3 and 4. 
 4. You may need to setup your devices to trust the 'root' certificate in `/home/YOUR_USERNAME/certificates/minica.pem`. For some systems, this may require the root certificate to be in a DER format CRT file.
    ```
