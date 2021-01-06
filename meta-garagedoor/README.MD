@@ -71,16 +71,16 @@ Keep in mind that the SSL certificate will need to match the hostname. In the ex
    ~/go/bin/minica --domains garage-door.local
    ```
    This gets the `go` lang tools, gets the source for minica, and builds / installs the tool into `~/go/bin`. Then we create a directory to store certificates in within the home directory, and execute the command there to create a root cert (you can trust on all your devices) and then issue a new purpose-specific cert from it.
-2. Update the `kas/local-env.yml` with the absolute paths to your cert & key.
+2. Update the `kas/local-env.yml` with the absolute path to the directory containing your generated cert.pem and key.pem.
    ```
    cd /opt/kas-builds
    nano meta-varnerized/kas/local-env.yml
    ```
-   Adding the lines like this:
+   Include a line such as:
    ```
      pigaragedoor_CERTDIR: "/home/YOUR_USERNAME/certificates/garage-door.local"
    ```
-   The file path _must_ be absolute, or this will not work properly.
+   The path _must_ be absolute, or this will not work properly.
 3. Run the kas build and copy the Image as in the Quick Build Instructions steps 3 and 4. 
 4. You may need to setup your devices to trust the 'root' certificate in `/home/YOUR_USERNAME/certificates/minica.pem`. For some systems, this may require the root certificate to be in a DER format CRT file.
    ```
