@@ -29,7 +29,7 @@ RDEPENDS_${PN}-staticdev_append = "\
 	bash \
 "
 
-inherit go-mod gorice systemd
+inherit go-mod gorice systemd optionalcerts
 
 GO_LINKSHARED = ''
 GO_IMPORT = "${PKG_NAME}"

@@ -24,20 +24,23 @@ setup_wpa_supplicant_append() {
 
     echo '[Match]' >> ${IMAGE_ROOTFS}/etc/systemd/network/wlan.network
     echo 'Name=wlan0' >> ${IMAGE_ROOTFS}/etc/systemd/network/wlan.network
-    echo '[Network]' >> ${IMAGE_ROOTFS}/etc/systemd/network/wlan.network
-    echo 'Address=192.168.1.1/24' >> ${IMAGE_ROOTFS}/etc/systemd/network/wlan.network
-    echo 'DHCPServer=yes' >> ${IMAGE_ROOTFS}/etc/systemd/network/wlan.network
-    echo '[DHCPServer]' >> ${IMAGE_ROOTFS}/etc/systemd/network/wlan.network
-    echo 'PoolOffset=50' >> ${IMAGE_ROOTFS}/etc/systemd/network/wlan.network
-    echo 'PoolSize=50' >> ${IMAGE_ROOTFS}/etc/systemd/network/wlan.network
-    echo 'DefaultLeaseTimeSec=900s' >> ${IMAGE_ROOTFS}/etc/systemd/network/wlan.network
-    echo 'EmitDNS=no' >> ${IMAGE_ROOTFS}/etc/systemd/network/wlan.network
-    echo 'EmitNTP=no' >> ${IMAGE_ROOTFS}/etc/systemd/network/wlan.network
-    echo 'EmitRouter=no' >> ${IMAGE_ROOTFS}/etc/systemd/network/wlan.network
-    echo 'EmitTimezone=no' >> ${IMAGE_ROOTFS}/etc/systemd/network/wlan.network
 
-    # If the SSID is null, setup a "RocketStand" adhoc network.
+    echo '[Network]' >> ${IMAGE_ROOTFS}/etc/systemd/network/wlan.network
+
+    # If the SSID is null, setup a "RocketStand" adhoc network with this machine acting as the DHCP server at 192.168.1.1
     if [ -z "${ssid}" ]; then
+        echo 'Address=192.168.1.1/24' >> ${IMAGE_ROOTFS}/etc/systemd/network/wlan.network
+        echo 'DHCPServer=yes' >> ${IMAGE_ROOTFS}/etc/systemd/network/wlan.network
+
+        echo '[DHCPServer]' >> ${IMAGE_ROOTFS}/etc/systemd/network/wlan.network
+        echo 'PoolOffset=50' >> ${IMAGE_ROOTFS}/etc/systemd/network/wlan.network
+        echo 'PoolSize=50' >> ${IMAGE_ROOTFS}/etc/systemd/network/wlan.network
+        echo 'DefaultLeaseTimeSec=900s' >> ${IMAGE_ROOTFS}/etc/systemd/network/wlan.network
+        echo 'EmitDNS=no' >> ${IMAGE_ROOTFS}/etc/systemd/network/wlan.network
+        echo 'EmitNTP=no' >> ${IMAGE_ROOTFS}/etc/systemd/network/wlan.network
+        echo 'EmitRouter=no' >> ${IMAGE_ROOTFS}/etc/systemd/network/wlan.network
+        echo 'EmitTimezone=no' >> ${IMAGE_ROOTFS}/etc/systemd/network/wlan.network
+
         # Update the wpa_supplicant to create an adhoc base station known as 'RocketStand'.
         echo 'ap_scan=2' >> ${IMAGE_ROOTFS}/etc/wpa_supplicant/wpa_supplicant-nl80211-wlan0.conf
         echo 'network={' >> ${IMAGE_ROOTFS}/etc/wpa_supplicant/wpa_supplicant-nl80211-wlan0.conf
@@ -56,6 +59,11 @@ setup_wpa_supplicant_append() {
             echo '    psk="ignition"' >> ${IMAGE_ROOTFS}/etc/wpa_supplicant/wpa_supplicant-nl80211-wlan0.conf
         fi
         echo '}' >> ${IMAGE_ROOTFS}/etc/wpa_supplicant/wpa_supplicant-nl80211-wlan0.conf
+    else
+        # Otherwise, setup DHCP client and route metric.
+        echo 'DHCP=yes' >> ${IMAGE_ROOTFS}/etc/systemd/network/wlan.network
+        echo '[DHCP]' >> ${IMAGE_ROOTFS}/etc/systemd/network/wlan.network
+        echo 'RouteMetric=20' >> ${IMAGE_ROOTFS}/etc/systemd/network/wlan.network
     fi
 }
 
