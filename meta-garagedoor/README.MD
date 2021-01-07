@@ -65,6 +65,7 @@ Keep in mind that the SSL certificate will need to match the hostname. In the ex
    sudo apt-get install golang
    cd ~
    git clone https://github.com/jsha/minica.git
+   cd minica
    go install
    mkdir ~/certificates
    cd ~/certificates
