@@ -17,13 +17,14 @@ target:
 repos:
   meta-varnerized:
     url: https://github.com/bvarner/meta-varnerized
-    refspec: gatesgarth
+    refspec: feature/forfunQ88
     layers:
+      meta-forfunQ88:
       meta-core:
 
   meta-sunxi:
     url: https://github.com/bvarner/meta-sunxi
-    refspec: feature/q8-a13-tablet
+    refspec: master
 
   poky:
     url: https://git.yoctoproject.org/git/poky
@@ -43,7 +44,7 @@ repos:
 
 local_conf_header:
   varnerized_setup: 
-    hostname_pn-base-files = "q88db"
+    hostname_pn-base-files = "Q88"
     PREFERRED_PROVIDER_virtual/libgl = "mesa"
     DISTRO_FEATURES = "systemd usbhost wifi zeroconf "
     DISTRO_FEATURES_BACKFILL_CONSIDERED += "sysvinit"
