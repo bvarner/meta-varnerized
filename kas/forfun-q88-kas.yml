@@ -9,7 +9,7 @@ env:
 #  ssid: ""
 #  psk: ""
 
-machine: q8-a13-tablet
+machine: forfun-q88-tablet
 distro: poky
 target:
   - core-image-weston
