@@ -12,7 +12,7 @@ env:
 machine: forfun-q88-tablet
 distro: poky
 target:
-  - core-image-weston
+  - core-image-varnerized
 
 repos:
   meta-varnerized:
