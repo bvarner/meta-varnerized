@@ -8,15 +8,15 @@ include recipes-core/images/core-image-minimal.bb
 
 IMAGE_INSTALL += " \
     ${MACHINE_EXTRA_RRECOMMENDS} \
-    ${MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS} \
     kernel-modules \
     tzdata \
     iw \
     wpa-supplicant \
-    wireless-regdb \
     dtc \
     i2c-tools \
     usbutils \
+    sunxi-tools \
+    crda \
 "
 
 disable_gettys() {
