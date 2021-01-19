@@ -43,6 +43,8 @@ repos:
       meta-networking:
 
 local_conf_header:
+  debugging:
+    RM_WORK_EXCLUDE += "u-boot linux-mainline "
   varnerized_setup: 
     hostname_pn-base-files = "Q88"
     PREFERRED_PROVIDER_virtual/libgl = "mesa"

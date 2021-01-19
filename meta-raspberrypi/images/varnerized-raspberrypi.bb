@@ -26,7 +26,7 @@ IMAGE_INSTALL += " \
     linux-firmware-rtl8192cu \
     linux-firmware-rtl8192su \
     wpa-supplicant \
-    wireless-regdb \    
+    wireless-regdb \
 "
 
 disable_gettys() {
