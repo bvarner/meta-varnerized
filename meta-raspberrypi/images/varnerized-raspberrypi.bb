@@ -27,13 +27,11 @@ IMAGE_INSTALL += " \
     linux-firmware-rtl8192su \
     wpa-supplicant \
     wireless-regdb \
-    watchdog \
 "
 
 configure_watchdog() {
-    echo "watchdog-device = /dev/watchdog" >> ${IMAGE_ROOTFS}/etc/watchdog.conf
-    echo "watchdog-timeout = 15" >> ${IMAGE_ROOTFS}/etc/watchdog.conf
-    echo "max-load-1 = 24" >> ${IMAGE_ROOTFS}/etc/watchdog.conf
+    echo "RuntimeWatchdogSec=10" >> ${IMAGE_ROOTFS}/etc/systemd/system.conf
+    echo "RebootWatchdogSec=5m" >> ${IMAGE_ROOTFS}/etc/systemd/system.conf
 }
 
 disable_gettys() {
