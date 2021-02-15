@@ -26,8 +26,15 @@ IMAGE_INSTALL += " \
     linux-firmware-rtl8192cu \
     linux-firmware-rtl8192su \
     wpa-supplicant \
-    wireless-regdb \    
+    wireless-regdb \
+    watchdog \
 "
+
+configure_watchdog() {
+    echo "watchdog-device = /dev/watchdog" >> ${IMAGE_ROOTFS}/etc/watchdog.conf
+    echo "watchdog-timeout = 15" >> ${IMAGE_ROOTFS}/etc/watchdog.conf
+    echo "max-load-1 = 24" >> ${IMAGE_ROOTFS}/etc/watchdog.conf
+}
 
 disable_gettys() {
     if [ -n "${disable_getty}" ]; then
@@ -78,6 +85,7 @@ ROOTFS_POSTPROCESS_COMMAND += " \
     setup_wpa_supplicant ; \
     disable_gettys ; \
     setup_certs ; \
+    configure_watchdog ; \
 "
 
 export IMAGE_BASENAME = "varnerized-raspberrypi-image"
