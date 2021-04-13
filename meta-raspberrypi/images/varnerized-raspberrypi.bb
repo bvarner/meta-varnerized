@@ -3,7 +3,7 @@ HOMEPAGE = "https://github.com/bvarner/meta-varnerized"
 LICENSE = "MIT"
 
 SDIMG_ROOTFS_TYPE = "ext4"
-IMAGES_FSTYPES += "wic wic.bmap"
+IMAGES_FSTYPES += "wic wic.bmap wic.bz2"
 WKS_FILE = "sdimage-raspberrypi.wks"
 
 DEPENDS += "bootfiles"
