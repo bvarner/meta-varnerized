@@ -27,7 +27,8 @@ FILES_${PN}_append = "\
 do_install_append() {
 	install -d ${D}${bindir}
 	install -m 0755 ${WORKDIR}/autoAP.sh ${D}${bindir}/
-
+	
+	# This is the autoap service that interacts with the wpa supplicant via wpa_cli to restart networking for AP fallback.
 	install -d ${D}${systemd_unitdir}/system/
 	install -d ${D}${sysconfdir}/systemd/system/multi-user.target.wants/
 	install -m 0644 ${WORKDIR}/systemd-units/wpa_cli@.service ${D}${systemd_unitdir}/system
