@@ -17,7 +17,7 @@ configure_client () {
 
 reconfigure_wpa_supplicant () {
     sleep "$1"
-    if [ "$(wpa_cli -i $device all_sta)" = ""]; then
+    if [ "$(wpa_cli -i $device all_sta)" = "" ]; then
             wpa_cli -i $device reconfigure
     fi
 }
