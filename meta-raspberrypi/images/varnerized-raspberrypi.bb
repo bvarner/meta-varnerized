@@ -6,7 +6,7 @@ SDIMG_ROOTFS_TYPE = "ext4"
 IMAGES_FSTYPES += "wic wic.bmap wic.bz2"
 WKS_FILE = "sdimage-raspberrypi.wks"
 
-DEPENDS += "bootfiles"
+DEPENDS += "rpi-bootfiles"
 
 IMAGE_LINGUAS = "en-us"
 
