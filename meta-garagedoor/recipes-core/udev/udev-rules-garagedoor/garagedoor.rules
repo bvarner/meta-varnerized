@@ -1,7 +1,7 @@
-KERNEL=="gpiochip*", SUBSYSTEM=="gpio", ACTION=="add", PROGRAM="/bin/sh -c 'for i in 17 27 23 24; do echo $$i > /sys/class/gpio/export; done; mkdir -p /dev/garagedoor'"
+KERNEL=="gpiochip*", SUBSYSTEM=="gpio", ACTION=="add", PROGRAM="/bin/sh -c 'for i in 17 18 2 3; do echo $$i > /sys/class/gpio/export; done; mkdir -p /dev/garagedoor'"
 
-KERNEL=="gpio23", SUBSYSTEM=="gpio", ACTION=="add", PROGRAM="/bin/sh -c 'echo in > /sys%p/direction; ln -s /sys%p/value /dev/garagedoor/in_door_a'"
-KERNEL=="gpio24", SUBSYSTEM=="gpio", ACTION=="add", PROGRAM="/bin/sh -c 'echo in > /sys%p/direction; ln -s /sys%p/value /dev/garagedoor/in_door_b'"
+KERNEL=="gpio2", SUBSYSTEM=="gpio", ACTION=="add", PROGRAM="/bin/sh -c 'echo in > /sys%p/direction; ln -s /sys%p/value /dev/garagedoor/in_door_a'"
+KERNEL=="gpio3", SUBSYSTEM=="gpio", ACTION=="add", PROGRAM="/bin/sh -c 'echo in > /sys%p/direction; ln -s /sys%p/value /dev/garagedoor/in_door_b'"
 
-KERNEL=="gpio17", SUBSYSTEM=="gpio", ACTION=="add", PROGRAM="/bin/sh -c 'echo 1 > /sys%p/active_low; echo out > /sys%p/direction; ln -s /sys%p/value /dev/garagedoor/out_relay_a'"
-KERNEL=="gpio27", SUBSYSTEM=="gpio", ACTION=="add", PROGRAM="/bin/sh -c 'echo 1 > /sys%p/active_low; echo out > /sys%p/direction; ln -s /sys%p/value /dev/garagedoor/out_relay_b'"
+KERNEL=="gpio17", SUBSYSTEM=="gpio", ACTION=="add", PROGRAM="/bin/sh -c 'echo 1 > /sys%p/active_low; echo out > /sys%p/direction; echo 0 > /sys%p/value; ln -s /sys%p/value /dev/garagedoor/out_relay_a'"
+KERNEL=="gpio18", SUBSYSTEM=="gpio", ACTION=="add", PROGRAM="/bin/sh -c 'echo 1 > /sys%p/active_low; echo out > /sys%p/direction; echo 0 > /sys%p/value; ln -s /sys%p/value /dev/garagedoor/out_relay_b'"

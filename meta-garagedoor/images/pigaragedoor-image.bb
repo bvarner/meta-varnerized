@@ -5,6 +5,7 @@ LICENSE = "MIT"
 include images/varnerized-raspberrypi.bb
 
 IMAGE_INSTALL += " \
+	udev-rules-garagedoor \
     pigaragedoor \
 "
 

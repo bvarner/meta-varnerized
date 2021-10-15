@@ -11,7 +11,8 @@ target:
 repos:
   meta-varnerized:
     url: https://github.com/bvarner/meta-varnerized
-    refspec: gatesgarth
+    refspec: feature/garagedoor-udev
+#    refspec: gatesgarth
     layers:
       meta-core:
       meta-raspberrypi:
