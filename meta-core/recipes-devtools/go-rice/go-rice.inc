@@ -14,11 +14,11 @@ SRC_URI = "\
 
 DEPENDS = ""
 
-RDEPENDS_${PN}-dev_append = "\
+RDEPENDS_${PN}-dev:append = "\
 	bash \
 "
 
-RDEPENDS_${PN}-staticdev_append = "\
+RDEPENDS_${PN}-staticdev:append = "\
 	bash \
 	perl \
 "
@@ -29,7 +29,7 @@ GO_INSTALL = "github.com/GeertJohan/go.rice github.com/GeertJohan/go.rice/rice"
 inherit go-mod
 
 # -buildmode=pie breaks rice. Skip "textrel" QA checking, and avoid setting -buildmode=pie.
-GOBUILDFLAGS_remove += ' -buildmode=pie'
+GOBUILDFLAGS:remove = '-buildmode=pie'
 # This overrides the inherited functions from go.bbclass
 python() {
     d.appendVar('INSANE_SKIP_%s' % d.getVar('PN'), " textrel")

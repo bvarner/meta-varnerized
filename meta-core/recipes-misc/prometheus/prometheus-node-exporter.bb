@@ -5,7 +5,7 @@ HOMEPAGE = "https://github.com/prometheus/node_exporter/"
 LICENSE = "APSL-2.0"
 LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/APSL-2.0;md5=f9e4701d9a216a87ba145bbe25f54c58"
 
-SRC_URI = "git://${GO_IMPORT};branch=release-1.0 \
+SRC_URI = "git://${GO_IMPORT};protocol=https;branch=release-1.0 \
 	file://systemd-units/node_exporter.service \
 "
 SRCREV = "${AUTOREV}"
@@ -15,11 +15,11 @@ GO_IMPORT = "github.com/prometheus/node_exporter"
 GO_INSTALL = "${GO_IMPORT}"
 
 
-RDEPENDS_${PN}_append = "\
+RDEPENDS_${PN}:append = "\
 	go-runtime \
 "
 
-RDEPENDS_${PN}-dev_append = "\
+RDEPENDS_${PN}-dev:append = "\
 	gawk \
 	bash \
 "
@@ -29,7 +29,7 @@ INSANE_SKIP_${PN}-dev = "file-rdeps"
 
 inherit go systemd
 
-do_install_append() {
+do_install:append() {
 	install -d ${D}${systemd_unitdir}/system
 	install -m 0644 ${WORKDIR}/systemd-units/node_exporter.service ${D}${systemd_unitdir}/system
 }

@@ -78,7 +78,7 @@ optionalcerts_install_files() {
 	done
 }
 
-do_install_append() {
+do_install:append() {
 	if [ -n "${OPTIONALCERT_FILES}" ]; then
 		install -d ${D}${sysconfdir}/ssl/certs/${PN}
 		optionalcerts_install_files "${OPTIONALCERT_FILES}"

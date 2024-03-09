@@ -1,9 +1,10 @@
 inherit go
 
+DEPENDS_GORICE ?= ""
 DEPENDS_GORICE_class-target = "go-rice-native"
 DEPENDS_GORICE_class-native = "go-rice-native"
 
-DEPENDS_append = " ${DEPENDS_GORICE}"
+DEPENDS:append = " ${DEPENDS_GORICE}"
 
 export RICE = "${STAGING_BINDIR_NATIVE}/rice"
 
@@ -22,7 +23,7 @@ go_list_executables() {
 		awk '{ print $1}'
 }
 
-go_do_compile_prepend() {
+go_do_compile:prepend() {
 	# Issue a `go get` with the proper modcache before executing rice.
 	export TMPDIR="${GOTMPDIR}"
 	if [ -n "${GO_INSTALL}" ]; then
@@ -40,7 +41,7 @@ go_do_compile_prepend() {
 	
 }
 
-go_do_compile_append() {
+go_do_compile:append() {
 	if [ -n "${GO_RICE_APPEND}" ]; then
 		go_list_executables | while read app; do
 			${RICE} ${RICE_ARGS} -i ${GO_IMPORT} append --exec $app
