@@ -14,55 +14,63 @@ MINICA_ROOT_DIR ?= '${WORKDIR}'
 GENCERT_DOMAINS ?= ''
 GENCERT_IPS ?= ''
 
-gencert_domain_certs() {
-	local IFS=";"
-	for dir in $1;
-	do
-		if [ ! -d "$dir" ]; then
-			${MINICA} -domains "$dir"
-		fi
-	done
-}
+def get_gencert_domains(d):
+    domains = d.getVar("GENCERT_DOMAINS")
+    if domains is not None:
+        domains = domains.replace(";", ",")
+    return domains
 
-gencert_ip_certs() {
-	local IFS=";"
-	for dir in $1;
-	do
-		if [ ! -d "$dir" ]; then
-			${MINICA} -ip-addresses "$dir"
-		fi
-	done
-}
+def get_gencert_ips(d):
+    ips = d.getVar("GENCERT_IPS")
+    if ips is not None:
+        ips = ips.replace(";", ",")
+    return ips
 
 do_compile_prepend() {
 	origDir=$PWD
 	
+	# Make the proper working dir if it doesn't exist.
 	if [ ! -d "${MINICA_ROOT_DIR}" ]; then
 		mkdir -p ${MINICA_ROOT_DIR}
 	fi
-	
-	
+
+	# Set working dir.
 	cd ${MINICA_ROOT_DIR}
+	
+	cleanDirs="${GENCERT_DOMAINS};${GENCERT_IPS}"
+
+	# Cleanup any existing certs
+	local IFS=";"
+	for dir in $cleanDirs
+	do
+		if [ -n "${dir}" ]; then
+			rm -fr ${dir}
+		fi
+	done
+	
 	if [ -n "${GENCERT_DOMAINS}" ]; then
-		gencert_domain_certs "${GENCERT_DOMAINS}"
+		bbdebug 2 "domains: ${@get_gencert_domains(d)} ips: ${@get_gencert_ips(d)}"
+		${MINICA} -domains "${@get_gencert_domains(d)}" -ip-addresses "${@get_gencert_ips(d)}"
 	fi
-	if [ -n "${GENCERT_IPS}" ]; then
-		gencert_ip_certs "${GENCERT_IPS}"
-	fi
+
+	# Restore Working dir.
 	cd $origDir
 }
 
 gencert_install_files() {
+	install -d ${D}${sysconfdir}/ssl/certs/${PN}
+	install -m 0444 ${MINICA_ROOT_DIR}/minica.pem ${D}${sysconfdir}/ssl/certs/${PN}-root.pem
+	install -m 0444 ${MINICA_ROOT_DIR}/minica-key.pem ${D}${sysconfdir}/ssl/certs/${PN}-root-key.pem
+
 	local IFS=";"
 	for dir in $1;
 	do
 		bbdebug 2 "gencerts_install: $dir"
 		if [ -n "$dir" ]; then
-		    install -d ${D}${sysconfdir}/ssl/certs/${PN}/${dir}
-			install -m 0444 ${MINICA_ROOT_DIR}/$dir/cert.pem ${D}${sysconfdir}/ssl/certs/${PN}/$dir
-			install -m 0444 ${MINICA_ROOT_DIR}/$dir/key.pem ${D}${sysconfdir}/ssl/certs/${PN}/$dir
-			install -m 0444 ${MINICA_ROOT_DIR}/minica.pem ${D}${sysconfdir}/ssl/certs/${PN}-root.pem
-			install -m 0444 ${MINICA_ROOT_DIR}/minica-key.pem ${D}${sysconfdir}/ssl/certs/${PN}-root-key.pem
+			if [ -d "${MINICA_ROOT_DIR}/$dir"]; then
+				install -m 0444 ${MINICA_ROOT_DIR}/$dir/cert.pem ${D}${sysconfdir}/ssl/certs/${PN}
+				install -m 0444 ${MINICA_ROOT_DIR}/$dir/key.pem ${D}${sysconfdir}/ssl/certs/${PN}
+			fi
 		fi
 	done
 }
