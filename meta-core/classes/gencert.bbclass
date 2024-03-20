@@ -67,7 +67,7 @@ gencert_install_files() {
 	do
 		bbdebug 2 "gencerts_install: $dir"
 		if [ -n "$dir" ]; then
-			if [ -d "${MINICA_ROOT_DIR}/$dir"]; then
+			if [ -d "${MINICA_ROOT_DIR}/$dir" ]; then
 				install -m 0444 ${MINICA_ROOT_DIR}/$dir/cert.pem ${D}${sysconfdir}/ssl/certs/${PN}
 				install -m 0444 ${MINICA_ROOT_DIR}/$dir/key.pem ${D}${sysconfdir}/ssl/certs/${PN}
 			fi
