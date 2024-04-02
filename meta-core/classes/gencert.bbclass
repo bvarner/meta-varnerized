@@ -39,6 +39,10 @@ do_compile_prepend() {
 	
 	cleanDirs="${GENCERT_DOMAINS};${GENCERT_IPS}"
 
+	
+	saved_IFS=$IFS
+	${IFS+':'} unset saved_IFS	
+	
 	# Cleanup any existing certs
 	local IFS=";"
 	for dir in $cleanDirs
@@ -48,6 +52,9 @@ do_compile_prepend() {
 		fi
 	done
 	
+	IFS=$saved_IFS
+	${saved_IFS+':'} unset IFS
+		
 	if [ -n "${GENCERT_DOMAINS}" ]; then
 		bbdebug 2 "domains: ${@get_gencert_domains(d)} ips: ${@get_gencert_ips(d)}"
 		${MINICA} -domains "${@get_gencert_domains(d)}" -ip-addresses "${@get_gencert_ips(d)}"
@@ -62,6 +69,9 @@ gencert_install_files() {
 	install -m 0444 ${MINICA_ROOT_DIR}/minica.pem ${D}${sysconfdir}/ssl/certs/${PN}-root.pem
 	install -m 0444 ${MINICA_ROOT_DIR}/minica-key.pem ${D}${sysconfdir}/ssl/certs/${PN}-root-key.pem
 
+	saved_IFS=$IFS
+	${IFS+':'} unset saved_IFS	
+	
 	local IFS=";"
 	for dir in $1;
 	do
@@ -73,6 +83,9 @@ gencert_install_files() {
 			fi
 		fi
 	done
+	
+	IFS=$saved_IFS
+	${saved_IFS+':'} unset IFS
 }
 
 do_install_append() {
