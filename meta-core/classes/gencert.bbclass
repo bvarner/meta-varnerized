@@ -7,7 +7,7 @@ DEPENDS_append = " ${DEPENDS_GENCERT}"
 
 export MINICA = "${STAGING_BINDIR_NATIVE}/minica"
 
-MINICA_ROOT_DIR ?= '${BUILDDIR}/gencerts/${PN}'
+MINICA_ROOT_DIR ?= '${TOPDIR}/gencert/${PN}'
 
 
 # Recipes inheriting this class can define these, and have certs generated for them.
@@ -28,6 +28,8 @@ def get_gencert_ips(d):
 
 do_compile_prepend() {
 	origDir=$PWD
+	
+	bbdebug 2 "minica root dir: ${MINICA_ROOT_DIR}"
 	
 	# Make the proper working dir if it doesn't exist.
 	if [ ! -d "${MINICA_ROOT_DIR}" ]; then
