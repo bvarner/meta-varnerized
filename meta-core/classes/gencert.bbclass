@@ -1,13 +1,13 @@
 # Generates certificates for the given packagename if provided with a list of semicolon separated domains or ip addresses.
 
-DEPENDS_GENCERT_class-target = "go-minica-native"
-DEPENDS_GENCERT_class-native = "go-minica-native"
+DEPENDS_GENCERT_class-target = "go-minica-native ca-certificates"
+DEPENDS_GENCERT_class-native = "go-minica-native openssl"
 
 DEPENDS_append = " ${DEPENDS_GENCERT}"
 
 export MINICA = "${STAGING_BINDIR_NATIVE}/minica"
 
-MINICA_ROOT_DIR ?= '${WORKDIR}'
+MINICA_ROOT_DIR ?= '${BUILDDIR}/gencerts/${PN}'
 
 
 # Recipes inheriting this class can define these, and have certs generated for them.
@@ -62,10 +62,14 @@ do_compile_prepend() {
 
 	# Restore Working dir.
 	cd $origDir
+	
+	# Convert the pem to crt.
+	openssl x509 -outform der -in ${MINICA_ROOT_DIR}/minica.pem -out ${MINICA_ROOT_DIR}/minica.crt
 }
 
 gencert_install_files() {
 	install -d ${D}${sysconfdir}/ssl/certs/${PN}
+	install -m 0444 ${MINICA_ROOT_DIR}/minica.crt ${D}${sysconfdir}/ssl/certs/${PN}-root.crt
 	install -m 0444 ${MINICA_ROOT_DIR}/minica.pem ${D}${sysconfdir}/ssl/certs/${PN}-root.pem
 	install -m 0444 ${MINICA_ROOT_DIR}/minica-key.pem ${D}${sysconfdir}/ssl/certs/${PN}-root-key.pem
 
