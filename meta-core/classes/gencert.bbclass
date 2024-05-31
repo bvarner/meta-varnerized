@@ -1,101 +1,76 @@
-# Generates certificates for the given packagename if provided with a list of semicolon separated domains or ip addresses.
+# The list of packages that should have gencert packaging scripts added.
+# For each entry, optionally include GENCERT_DOMAINS_[package] and
+# GENCERT_IPS_[package] to specify the domains and ips for the cert to generate.
+GENCERT_PACKAGES ?= '${PN}'
 
 DEPENDS_GENCERT_class-target = "go-minica-native ca-certificates"
 DEPENDS_GENCERT_class-native = "go-minica-native openssl"
 
 DEPENDS_append = " ${DEPENDS_GENCERT}"
 
-export MINICA = "${STAGING_BINDIR_NATIVE}/minica"
+inherit minica
 
-MINICA_ROOT_DIR ?= '${TOPDIR}/gencert/${PN}'
+python gencert_populate_packages() {
+    import subprocess
+    
+    bb.debug(1, "MINICA_ROOT_DIR " + d.getVar("MINICA_ROOT_DIR"))
 
+    # Add files to FILES_pkg if existent and not already done
+    def gencert_append_file(pkg, file_append):
+        appended = False
+        if os.path.exists(oe.path.join(d.getVar("MINICA_ROOT_DIR"), file_append)):
+            files = d.getVar('FILES_' + pkg, False) or ""
+            if file_append not in files.split():
+                d.appendVar('FILES_' + pkg, " " + file_append)
+                bb.debug(1, 'Added to FILES_' + pkg + "  " + file_append)
+                appended = True
+        return appended
+        
+    if os.path.exists(d.getVar("D")):
+        # For each package that inherits us, run the stuff.
+        for pkg in d.getVar('GENCERT_PACKAGES').split():
+            bb.debug(1, 'gencert_populate_packages for %s' % pkg)
 
-# Recipes inheriting this class can define these, and have certs generated for them.
-GENCERT_DOMAINS ?= ''
-GENCERT_IPS ?= ''
+            cleanDirs = ''
+            domains = (d.getVar('GENCERT_DOMAINS_' + pkg) or '')
+            ips = (d.getVar('GENCERT_IPS_' + pkg) or '')
+            cleanDirs = ";".join([domains, ips]).replace(";", " ")
 
-def get_gencert_domains(d):
-    domains = d.getVar("GENCERT_DOMAINS")
-    if domains is not None:
-        domains = domains.replace(";", ",")
-    return domains
+            bb.debug(1, '  cleanDirs: %s' % cleanDirs)
+            for dir in cleanDirs.split(" "):
+                cmd = 'rm -fr ' + d.getVar('MINICA_ROOT_DIR') + dir
+                bb.debug(1, '  %s' % cmd)
+                subprocess.check_output(cmd, shell=True, stderr=subprocess.STDOUT)
 
-def get_gencert_ips(d):
-    ips = d.getVar("GENCERT_IPS")
-    if ips is not None:
-        ips = ips.replace(";", ",")
-    return ips
+            bb.utils.mkdirhier(d.getVar('MINICA_ROOT_DIR'))
 
-do_compile_prepend() {
-	origDir=$PWD
-	
-	bbdebug 2 "minica root dir: ${MINICA_ROOT_DIR}"
-	
-	# Make the proper working dir if it doesn't exist.
-	if [ ! -d "${MINICA_ROOT_DIR}" ]; then
-		mkdir -p ${MINICA_ROOT_DIR}
-	fi
+            cmd = '' + d.getVar('MINICA')
+            if domains:
+                cmd = cmd + ' -domains "' + domains + '"'
 
-	# Set working dir.
-	cd ${MINICA_ROOT_DIR}
-	
-	cleanDirs="${GENCERT_DOMAINS};${GENCERT_IPS}"
+            if ips:
+                cmd = cmd + ' -ip-addresses "' + ips + '"'
 
-	
-	saved_IFS=$IFS
-	${IFS+':'} unset saved_IFS	
-	
-	# Cleanup any existing certs
-	local IFS=";"
-	for dir in $cleanDirs
-	do
-		if [ -n "${dir}" ]; then
-			rm -fr ${dir}
-		fi
-	done
-	
-	IFS=$saved_IFS
-	${saved_IFS+':'} unset IFS
-		
-	if [ -n "${GENCERT_DOMAINS}" ]; then
-		bbdebug 2 "domains: ${@get_gencert_domains(d)} ips: ${@get_gencert_ips(d)}"
-		${MINICA} -domains "${@get_gencert_domains(d)}" -ip-addresses "${@get_gencert_ips(d)}"
-	fi
+            bb.debug(1, 'executing: %s' % cmd)
+            subprocess.check_output(cmd, cwd=d.getVar('MINICA_ROOT_DIR'), shell=True, stderr=subprocess.STDOUT)
+            
+            # For every pem, generate an appropriate crt as well.
+            cmd = 'find ' + d.getVar('MINICA_ROOT_DIR') + ' -type f -name \'*.pem\' -not -name \'*key.pem\' | sed \'s,^' + d.getVar('MINICA_ROOT_DIR') + ',,\' | sort'
+            pemlist = subprocess.check_output(cmd, cwd=d.getVar('MINICA_ROOT_DIR'), shell=True, stderr=subprocess.STDOUT).decode('utf-8')
+            for pem in pemlist.split():
+                cmd = 'openssl x509 -outform der -in ' + d.getVar('MINICA_ROOT_DIR') + '/' + pem + ' -out ' + d.getVar('MINICA_ROOT_DIR') + '/' + pem.rsplit('.', 1)[0] + '.crt'
+                subprocess.check_output(cmd, cwd=d.getVar('MINICA_ROOT_DIR'), shell=True, stderr=subprocess.STDOUT)
 
-	# Restore Working dir.
-	cd $origDir
-	
-	# Convert the pem to crt.
-	openssl x509 -outform der -in ${MINICA_ROOT_DIR}/minica.pem -out ${MINICA_ROOT_DIR}/minica.crt
+            # Get a list of all the .crts generated in the minica root directory.
+            cmd = 'find ' + d.getVar('MINICA_ROOT_DIR') + ' -type f -name \'*.crt\' | sed \'s,^' + d.getVar('MINICA_ROOT_DIR') + ',,\' | sort'
+            certlist = subprocess.check_output(cmd, cwd=d.getVar('MINICA_ROOT_DIR'), shell=True, stderr=subprocess.STDOUT).decode('utf-8')
+            # For each certificate, add it to the file list for the package.
+            for cert in certlist.split():
+                gencert_append_file('ca-certificates', cert)
 }
 
-gencert_install_files() {
-	install -d ${D}${sysconfdir}/ssl/certs/${PN}
-	install -m 0444 ${MINICA_ROOT_DIR}/minica.crt ${D}${sysconfdir}/ssl/certs/${PN}-root.crt
-	install -m 0444 ${MINICA_ROOT_DIR}/minica.pem ${D}${sysconfdir}/ssl/certs/${PN}-root.pem
-	install -m 0444 ${MINICA_ROOT_DIR}/minica-key.pem ${D}${sysconfdir}/ssl/certs/${PN}-root-key.pem
-
-	saved_IFS=$IFS
-	${IFS+':'} unset saved_IFS	
-	
-	local IFS=";"
-	for dir in $1;
-	do
-		bbdebug 2 "gencerts_install: $dir"
-		if [ -n "$dir" ]; then
-			if [ -d "${MINICA_ROOT_DIR}/$dir" ]; then
-				install -m 0444 ${MINICA_ROOT_DIR}/$dir/cert.pem ${D}${sysconfdir}/ssl/certs/${PN}
-				install -m 0444 ${MINICA_ROOT_DIR}/$dir/key.pem ${D}${sysconfdir}/ssl/certs/${PN}
-			fi
-		fi
-	done
-	
-	IFS=$saved_IFS
-	${saved_IFS+':'} unset IFS
+pkg_postinst_${PN}_class-target() {
+    SYSROOT="$D" $D${sbindir}/update-ca-certificates
 }
 
-do_install_append() {
-	if [ -n "${GENCERT_DOMAINS}${GENCERT_IPS}" ]; then
-		gencert_install_files "${GENCERT_DOMAINS};${GENCERT_IPS}"
-	fi
-}
+PACKAGESPLITFUNCS_prepend = "gencert_populate_packages "
