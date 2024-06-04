@@ -54,19 +54,28 @@ python gencert_populate_packages() {
             bb.debug(1, 'executing: %s' % cmd)
             subprocess.check_output(cmd, cwd=d.getVar('MINICA_ROOT_DIR'), shell=True, stderr=subprocess.STDOUT)
             
-            # For every pem, generate an appropriate crt as well.
+            # Get a list of all the .pems generated in the minica root directory. Copy them and add a .crt.
             cmd = 'find ' + d.getVar('MINICA_ROOT_DIR') + ' -type f -name \'*.pem\' -not -name \'*key.pem\' | sed \'s,^' + d.getVar('MINICA_ROOT_DIR') + ',,\' | sort'
-            pemlist = subprocess.check_output(cmd, cwd=d.getVar('MINICA_ROOT_DIR'), shell=True, stderr=subprocess.STDOUT).decode('utf-8')
-            for pem in pemlist.split():
-                cmd = 'openssl x509 -outform der -in ' + d.getVar('MINICA_ROOT_DIR') + '/' + pem + ' -out ' + d.getVar('MINICA_ROOT_DIR') + '/' + pem.rsplit('.', 1)[0] + '.crt'
-                subprocess.check_output(cmd, cwd=d.getVar('MINICA_ROOT_DIR'), shell=True, stderr=subprocess.STDOUT)
-
-            # Get a list of all the .crts generated in the minica root directory.
-            cmd = 'find ' + d.getVar('MINICA_ROOT_DIR') + ' -type f -name \'*.crt\' | sed \'s,^' + d.getVar('MINICA_ROOT_DIR') + ',,\' | sort'
             certlist = subprocess.check_output(cmd, cwd=d.getVar('MINICA_ROOT_DIR'), shell=True, stderr=subprocess.STDOUT).decode('utf-8')
-            # For each certificate, add it to the file list for the package.
-            for cert in certlist.split():
-                gencert_append_file('ca-certificates', cert)
+            # For each certificate, copy it to a .crt and that to the file list for the package.
+            for pem in certlist.split():
+                cmd = 'cp ' + d.getVar('MINICA_ROOT_DIR') + '/' + pem + ' ' + d.getVar('MINICA_ROOT_DIR') + '/' + pem.rsplit('.', 1)[0] + '.crt'
+                bb.debug(1, 'executing: ' + cmd)
+                subprocess.check_output(cmd, cwd=d.getVar('MINICA_ROOT_DIR'), shell=True, stderr=subprocess.STDOUT)
+                gencert_append_file('ca-certificates', pem.rsplit('.', 1)[0] + '.crt')
+}
+
+# Ensure that we install the generated cert & key pem pairs as part of this package.
+do_install_append() {
+    install -d ${D}${sysconfdir}/ssl/certs/{$PN}
+    
+	files=$(find ${MINICA_ROOT_DIR} -type f -name '*.pem' | sed "s|^${MINICA_ROOT_DIR}||" | sort)
+	
+	for file in $files; do
+        dest_dir="${D}${sysconfdir}/ssl/certs/${PN}/${file}"
+        mkdir -p "$(dirname "$dest_dir")"
+        install -m 0644 "${MINICA_ROOT_DIR}$file" "$dest_dir"
+	done
 }
 
 pkg_postinst_${PN}_class-target() {
