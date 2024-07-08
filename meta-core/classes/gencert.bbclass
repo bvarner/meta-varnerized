@@ -59,7 +59,7 @@ python gencert_populate_packages() {
             certlist = subprocess.check_output(cmd, cwd=d.getVar('MINICA_ROOT_DIR'), shell=True, stderr=subprocess.STDOUT).decode('utf-8')
             # For each certificate, copy it to a .crt and that to the file list for the package.
             for pem in certlist.split():
-                cmd = 'cp ' + d.getVar('MINICA_ROOT_DIR') + '/' + pem + ' ' + d.getVar('MINICA_ROOT_DIR') + '/' + pem.rsplit('.', 1)[0] + '.crt'
+                cmd = 'cp ' + d.getVar('MINICA_ROOT_DIR') + pem + ' ' + d.getVar('MINICA_ROOT_DIR') + pem.rsplit('.', 1)[0] + '.crt'
                 bb.debug(1, 'executing: ' + cmd)
                 subprocess.check_output(cmd, cwd=d.getVar('MINICA_ROOT_DIR'), shell=True, stderr=subprocess.STDOUT)
                 gencert_append_file('ca-certificates', pem.rsplit('.', 1)[0] + '.crt')
@@ -67,19 +67,37 @@ python gencert_populate_packages() {
 
 # Ensure that we install the generated cert & key pem pairs as part of this package.
 do_install_append() {
-    install -d ${D}${sysconfdir}/ssl/certs/{$PN}
+    install -d ${D}${sysconfdir}/ssl/certs/${PN}
+    
+    bbdebug 1 "Looking for gencert files to install..."
     
 	files=$(find ${MINICA_ROOT_DIR} -type f -name '*.pem' | sed "s|^${MINICA_ROOT_DIR}||" | sort)
-	
+
 	for file in $files; do
-        dest_dir="${D}${sysconfdir}/ssl/certs/${PN}/${file}"
-        mkdir -p "$(dirname "$dest_dir")"
-        install -m 0644 "${MINICA_ROOT_DIR}$file" "$dest_dir"
+	    dest_file="${D}${sysconfdir}/ssl/certs/${PN}/${file}"
+
+        dest_dir="$(dirname "$dest_file")"
+        
+        bbdebug 1 "Installing -d $dest_dir"
+        mkdir -p "$dest_dir"
+        install -d "$dest_dir"
+        
+        install -m 0644 "${MINICA_ROOT_DIR}$file" "$dest_file"
+        bbdebug 1 "installing $dest_file"
 	done
 }
 
 pkg_postinst_${PN}_class-target() {
-    SYSROOT="$D" $D${sbindir}/update-ca-certificates
+#!/bin/sh
+    if [ "x$D" != "x" ]; then
+        # When installing to the target filesystem during the build, do nothing
+        exit 0
+    fi
+
+    # Commands to run on the target system after package installation
+    echo "Running post-install script for ${PN}"
+    
+    /usr/sbin/update-ca-certificates
 }
 
 PACKAGESPLITFUNCS_prepend = "gencert_populate_packages "
