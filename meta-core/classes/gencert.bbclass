@@ -3,6 +3,7 @@
 # GENCERT_IPS_[package] to specify the domains and ips for the cert to generate.
 GENCERT_PACKAGES ?= '${PN}'
 
+DEPENDS_GENCERT ?= ""
 DEPENDS_GENCERT_class-target = "go-minica-native ca-certificates"
 DEPENDS_GENCERT_class-native = "go-minica-native openssl"
 
