@@ -9,7 +9,7 @@ SRCNAME = "go.rice"
 PKG_NAME = "github.com/GeertJohan/${SRCNAME}"
 SRCREV = "v1.0.2"
 SRC_URI = "\
-	git://${PKG_NAME}.git;tag=${SRCREV} \
+	git://${PKG_NAME}.git;protocol=https;tag=${SRCREV} \
 "
 
 DEPENDS = ""

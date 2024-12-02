@@ -7,9 +7,9 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda
 
 SRCNAME = "minica"
 PKG_NAME = "github.com/jsha/${SRCNAME}"
-SRCREV = "v1.0.2"
+SRCREV = "a0b8b091a61f0563f7bb558ece8419149d8fc994"
 SRC_URI = "\
-	git://${PKG_NAME}.git;tag=${SRCREV} \
+	git://${PKG_NAME}.git;protocol=https;branch=master \
 "
 
 DEPENDS = ""
