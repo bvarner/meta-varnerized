@@ -29,7 +29,7 @@ GO_INSTALL = "github.com/jsha/minica/minica"
 inherit go-mod
 
 # -buildmode=pie breaks a lot of things.
-GOBUILDFLAGS:remove += ' -buildmode=pie'
+GOBUILDFLAGS:remove = "-buildmode=pie"
 # This overrides the inherited functions from go.bbclass
 python() {
     d.appendVar('INSANE_SKIP_%s' % d.getVar('PN'), " textrel")
