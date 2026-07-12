@@ -4,8 +4,8 @@ header:
 env:
   disable_getty: ""
   timezone: "America/Indiana/Indianapolis"
-  ssid: ""
-  psk: ""
+  ssid: "LooneyBin 5.0"
+  psk: "crazyeagle814"
 #  pigaragedoor_CERTDIR: "/path/to/your/garage-door.local"
 
 

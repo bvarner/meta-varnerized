@@ -1,4 +1,4 @@
-FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
+FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
 
 # overlays are activated in bsp bootfiles, by appending dtoverlay to the config.
 SRC_URI += "file://hx711.cfg \
@@ -18,5 +18,4 @@ KERNEL_MODULE_PROBECONF += "iio_hwmon "
 
 KERNEL_MODULE_AUTOLOAD += "i2c-dev "
 KERNEL_MODULE_PROBECONF += "i2c-dev "
-
 

@@ -19,12 +19,12 @@ DEPENDS = "\
 	avahi \
 "
 
-RDEPENDS_${PN}_append = "\
+RDEPENDS:${PN}:append = "\
 	avahi-daemon \
 	avahi-autoipd \
 "
 
-RDEPENDS_${PN}-staticdev_append = "\
+RDEPENDS:${PN}-staticdev:append = "\
 	perl \
 	bash \
 "
@@ -40,7 +40,7 @@ RICE_ARGS = "-v -i ${GO_IMPORT}/${SRCNAME}"
 GO_RICE_EMBEDTYPE = 'go'
 
 
-do_install_append() {
+do_install:append() {
 	install -d ${D}${systemd_unitdir}/system
 	install -m 0644 ${WORKDIR}/systemd-units/${SRCNAME}.service ${D}${systemd_unitdir}/system
 	
@@ -51,5 +51,5 @@ do_install_append() {
 }
 
 SYSTEMD_PACKAGES += "${PN}"
-SYSTEMD_SERVICE_${PN} = "${SRCNAME}.service"
-SYSTEMD_AUTO_ENABLE_${PN} = "enable"
+SYSTEMD_SERVICE:${PN} = "${SRCNAME}.service"
+SYSTEMD_AUTO_ENABLE:${PN} = "enable"

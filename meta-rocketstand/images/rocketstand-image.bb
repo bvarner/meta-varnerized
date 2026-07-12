@@ -17,7 +17,7 @@ IMAGE_INSTALL += " \
 # Sets up an /etc/wpa_supplicant directory, where you can put configurations for 
 # wpa_supplicant for your network devices. 
 # Enables wpa_supplicant for 802.11 on wlan0
-setup_wpa_supplicant_append() {
+setup_wpa_supplicant:append() {
     # Hackup the wlan.network to setup wlan0 as a DHCP server with a static IP address.
     rm ${IMAGE_ROOTFS}/etc/systemd/network/wlan.network
     touch ${IMAGE_ROOTFS}/etc/systemd/network/wlan.network

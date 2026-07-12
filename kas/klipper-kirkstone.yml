@@ -1,0 +1,65 @@
+header:
+  version: 9
+  includes:
+    - local-env.yml
+
+env:
+  timezone: "UTC"
+
+machine: raspberrypi4-64
+distro: poky
+target:
+  - klipper-image
+
+repos:
+  poky:
+    name: 00-poky
+    url: https://git.yoctoproject.org/git/poky
+    refspec: kirkstone
+    layers:
+      meta:
+      meta-poky:
+      meta-yocto-bsp:
+
+  meta-openembedded:
+    name: 01-meta-openembedded
+    url: http://git.openembedded.org/meta-openembedded
+    refspec: kirkstone
+    layers:
+      meta-oe:
+      meta-python:
+      meta-networking:
+
+  meta-arm:
+    name: 02-meta-arm
+    url: https://git.yoctoproject.org/meta-arm
+    refspec: kirkstone
+    layers:
+      meta-arm:
+      meta-arm-toolchain:
+
+  meta-raspberrypi:
+    name: 03-meta-raspberrypi
+    url: https://github.com/agherzan/meta-raspberrypi.git
+    refspec: kirkstone
+
+  meta-varnerized:
+    name: 12-meta-varnerized-local
+    path: /opt/kas-build/12-meta-varnerized
+    layers:
+      meta-core:
+      meta-raspberrypi:
+      meta-klipper:
+
+local_conf_header:
+  standard: |
+    CONF_VERSION = "2"
+    PACKAGE_CLASSES = "package_rpm"
+    USER_CLASSES = "buildstats"
+    PATCHRESOLVE = "noop"
+    VIRTUAL-RUNTIME_init_manager = "systemd"
+    VIRTUAL-RUNTIME_initscripts = "systemd-compat-units"
+  klipper_host: |
+    hostname_pn-base-files = "klipper-pi"
+    DISTRO_FEATURES:append = " systemd usbhost wifi"
+    IMAGE_FSTYPES:append = " wic.bmap"

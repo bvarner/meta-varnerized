@@ -1,0 +1,43 @@
+#!/bin/sh
+set -eu
+
+KLIPPER_HOME=${KLIPPER_HOME:-/usr/share/klipper}
+KLIPPER_BOARD=${KLIPPER_BOARD:-btt-octopus-f446-v1}
+
+usage() {
+    cat <<EOF
+usage: klipper-mcu <menuconfig|build|flash> [device]
+
+environment:
+  KLIPPER_HOME  klipper source tree (default: /usr/share/klipper)
+  KLIPPER_BOARD klipper board name for flashing (default: btt-octopus-f446-v1)
+EOF
+}
+
+cmd=${1:-}
+shift || true
+
+case "${cmd}" in
+    menuconfig)
+        cd "${KLIPPER_HOME}"
+        exec make menuconfig "$@"
+        ;;
+    build)
+        cd "${KLIPPER_HOME}"
+        exec make "$@"
+        ;;
+    flash)
+        device=${1:-}
+        if [ -z "${device}" ]; then
+            usage >&2
+            exit 1
+        fi
+        shift || true
+        cd "${KLIPPER_HOME}"
+        exec ./scripts/flash-sdcard.sh "${device}" "${KLIPPER_BOARD}" "$@"
+        ;;
+    *)
+        usage >&2
+        exit 1
+        ;;
+esac

@@ -18,12 +18,12 @@ DEPENDS = "\
 	avahi \
 "
 
-RDEPENDS_${PN}_append = "\
+RDEPENDS:${PN}:append = "\
 	avahi-daemon \
 	avahi-autoipd \
 "
 
-RDEPENDS_${PN}-staticdev_append = "\
+RDEPENDS:${PN}-staticdev:append = "\
 	perl \
 	bash \
 "
@@ -32,8 +32,8 @@ RDEPENDS_${PN}-staticdev_append = "\
 # godep is being really stupid as a class. It's deleting the Gopkg.toml and lock.
 #inherit gorice godep systemd
 # So we'll duplicate most of it's functionality here.
-DEPENDS_append = " go-dep-native"
-do_compile_prepend() {
+DEPENDS:append = " go-dep-native"
+do_compile:prepend() {
     ( cd ${WORKDIR}/build/src/${GO_IMPORT} && dep ensure -v )
 }
 ## end godep hacking
@@ -44,7 +44,7 @@ GO_LINKSHARED = ''
 GO_IMPORT = "${PKG_NAME}"
 GO_INSTALL = "${GO_IMPORT}/..."
 
-do_install_append() {
+do_install:append() {
 	install -d ${D}${systemd_unitdir}/system
 	install -m 0644 ${WORKDIR}/systemd-units/${SRCNAME}.service ${D}${systemd_unitdir}/system
 	
@@ -55,5 +55,5 @@ do_install_append() {
 }
 
 SYSTEMD_PACKAGES += "${PN}"
-SYSTEMD_SERVICE_${PN} = "${SRCNAME}.service"
-SYSTEMD_AUTO_ENABLE_${PN} = "enable"
+SYSTEMD_SERVICE:${PN} = "${SRCNAME}.service"
+SYSTEMD_AUTO_ENABLE:${PN} = "enable"

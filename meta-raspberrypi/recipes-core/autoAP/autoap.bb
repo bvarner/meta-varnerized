@@ -16,15 +16,15 @@ SRC_URI = "\
 inherit features_check
 REQUIRED_DISTRO_FEATURES = "systemd"
 
-RDEPENDS_${PN}_append = "\
+RDEPENDS:${PN}:append = "\
 	bash \
 "
-FILES_${PN}_append = "\
+FILES:${PN}:append = "\
 	/lib/systemd/system \
 	/lib/systemd/system/wpa_cli@.service \
 "
 
-do_install_append() {
+do_install:append() {
 	install -d ${D}${bindir}
 	install -m 0755 ${WORKDIR}/autoAP.sh ${D}${bindir}/
 	

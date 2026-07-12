@@ -11,7 +11,7 @@ DEPENDS += "rpi-bootfiles"
 IMAGE_LINGUAS = "en-us"
 
 IMAGE_FEATURES += "read-only-rootfs"
-IMAGE_FEATURES_remove += "splash"
+IMAGE_FEATURES:remove += "splash"
 
 include recipes-core/images/core-image-minimal.bb
 
@@ -87,4 +87,3 @@ ROOTFS_POSTPROCESS_COMMAND += " \
 "
 
 export IMAGE_BASENAME = "varnerized-raspberrypi-image"
-
